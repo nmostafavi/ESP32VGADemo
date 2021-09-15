@@ -30,22 +30,12 @@ void setup()
     balls = new Ball[numBalls];
 }
 
-void update()
+void update(int dt)
 {
     for (int i = 0; i < numBalls; i++)
     {
         Ball& b = balls[i];
-        b.x += b.vx;
-        b.y += b.vy;
-
-        if (b.x < 0 || b.x > vga.xres)
-        {
-            b.vx *= -1;
-        }
-        if (b.y < 0 || b.y > vga.yres)
-        {
-            b.vy *= -1;
-        }
+        b.update(dt);
     }
 }
 
@@ -64,7 +54,7 @@ void draw(int t)
     for (int i = 0; i < numBalls; i++)
     {
         const Ball& b = balls[i];
-        vga.circle(b.x, b.y, 10, 0xffff);
+        b.draw(vga);
     }
 
     // metaballs
@@ -102,12 +92,13 @@ void loop()
     // FPS counter
     static int lastMillis = 0;
     int t = millis();
-    int fps = 1000 / (t - lastMillis);
+    int dt = (t - lastMillis);
+    int fps = 1000 / dt;
     lastMillis = t;
 
     vga.clear();
 
-    update();
+    update(dt);
     draw(t);
 
     // Debug text
