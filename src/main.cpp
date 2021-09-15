@@ -86,7 +86,7 @@ void draw(int t)
         float dist = b.dist(x, y);
         if (dist > 0.0f)
         {
-          v += 1.0f / b.dist(x, y);
+          v += 1.0f / dist;
         }
       }
 

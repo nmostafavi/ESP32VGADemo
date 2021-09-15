@@ -14,9 +14,14 @@ class Ball
       vy = random(-100, 100);
     }
 
+    float distSq(float pX, float pY) const
+    {
+      return (pX - x) * (pX - x) + (pY - y) * (pY - y);
+    }
+
     float dist(float pX, float pY) const
     {
-      return Vector::sqrt((pX - x) * (pX - x) + (pY - y) * (pY - y));
+      return Vector::sqrt(distSq(pX, pY));
     }
 
     void update(int dt)

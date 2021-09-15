@@ -16,7 +16,7 @@ class Label
       int pY = y;
       for (int i = 0; i < text.length(); i++)
       {
-        int yOffset = 3.0 * cosf(2.0*PI*t/1000.0f + PI*pX/50.0f);
+        int yOffset = 3.0 * cosf(2.0*PI*t/1000.0 + PI*pX/50.0);
         vga.drawChar(pX, (pY + yOffset), text[i]);
         pX += 6;
       }
