@@ -16,75 +16,92 @@ VGA14Bit vga;
 const int numBalls = 3;
 Ball *balls = nullptr;
 
+const int numGravityBalls = 100;
+GravityBall *gravityBalls = nullptr;
+
 void setup()
 {
-    // init
-    Serial.begin(115200);
-    randomSeed(analogRead(0));
+  // init
+  Serial.begin(115200);
+  randomSeed(analogRead(0));
 
-    // graphics and framebuffer
-    vga.setFrameBufferCount(2);
-    vga.init(vga.MODE320x200, redPins, greenPins, bluePins, hsyncPin, vsyncPin);
-    vga.setFont(Font6x8);
+  // graphics and framebuffer
+  vga.setFrameBufferCount(2);
+  vga.init(vga.MODE320x200, redPins, greenPins, bluePins, hsyncPin, vsyncPin);
+  vga.setFont(Font6x8);
 
-    balls = new Ball[numBalls];
+  balls = new Ball[numBalls];
+  gravityBalls = new GravityBall[numGravityBalls];
 }
 
 void update(int dt)
 {
-    for (int i = 0; i < numBalls; i++)
-    {
-        Ball& b = balls[i];
-        b.update(dt);
-    }
+  for (int i = 0; i < numBalls; i++)
+  {
+    Ball& b = balls[i];
+    b.update(dt);
+  }
+
+  for (int i = 0; i < numGravityBalls; i++)
+  {
+    GravityBall& gb = gravityBalls[i];
+    gb.update(dt);
+  }
 }
 
 void draw(int t)
 {
-    // gradient
-    for (int x = 0; x < 320; x++)
+  // gradient
+  for (int x = 0; x < 320; x++)
+  {
+    for (int y = 0; y < 200; y++)
     {
-        for (int y = 0; y < 200; y++)
-        {
-            vga.dot(x, y, vga.RGBA(x*255/320, x*255/320, x*255/320, 255));
-        }
+      vga.dot(x, y, vga.RGBA(x*255/320, x*255/320, x*255/320, 255));
     }
+  }
 
-    // circles
-    for (int i = 0; i < numBalls; i++)
+  // balls
+  for (int i = 0; i < numBalls; i++)
+  {
+    const Ball& b = balls[i];
+    b.draw(vga);
+  }
+
+  // more balls
+  for (int i = 0; i < numGravityBalls; i++)
+  {
+    const GravityBall& gb = gravityBalls[i];
+    gb.draw(vga);
+  }
+
+  // metaballs
+  for (int x = 140; x < 300; x++)
+  {
+    for (int y = 40; y < 120; y++)
     {
+      float v = 0.0f;
+      for (int i = 0; i < numBalls; i++)
+      {
         const Ball& b = balls[i];
-        b.draw(vga);
-    }
-
-    // metaballs
-    for (int x = 140; x < 300; x++)
-    {
-        for (int y = 40; y < 120; y++)
+        float dist = b.dist(x, y);
+        if (dist > 0.0f)
         {
-            float v = 0.0f;
-            for (int i = 0; i < numBalls; i++)
-            {
-                const Ball& b = balls[i];
-                float dist = b.dist(x, y);
-                if (dist > 0.0f)
-                {
-                    v += 1.0f / b.dist(x, y);
-                }
-            }
-
-            v = constrain(v*10.0, 0.0, 1.0);
-            v = fmodf((v), 1.0);
-            unsigned short c = ColorRamp::getColor(hslRamp, v);
-            vga.dot(x, y, c);
+          v += 1.0f / b.dist(x, y);
         }
-    }
+      }
 
-    // wave labels
-    Label("feed me metaballs", 20, 40).draw(vga, t);
-    Label("feed me metaballs", 20, 50).draw(vga, t);
-    Label("feed me metaballs", 20, 60).draw(vga, t);
-    Label("feed me metaballs", 20, 70).draw(vga, t);
+      v = constrain(v*10.0, 0.0, 1.0);
+      v = fmodf((v), 1.0);
+      unsigned short c = ColorRamp::getColor(hslRamp, v);
+      vga.dot(x, y, c);
+    }
+  }
+
+  // wave labels
+  Label("feed me metaballs", 20, 40).draw(vga, t);
+  Label("feed me metaballs", 20, 50).draw(vga, t);
+  Label("feed me metaballs", 20, 60).draw(vga, t);
+  Label("feed me metaballs", 20, 70).draw(vga, t);
 }
 
 void loop()

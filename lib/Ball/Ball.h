@@ -40,3 +40,44 @@ class Ball
       vga.circle(x, y, 10, 0xf00f);
     }
 };
+
+class GravityBall
+{
+  private:
+    float x, y, vx, vy;
+    unsigned int c;
+  
+  public:
+    GravityBall()
+    {
+      x = random(200, 320);
+      y = random(100, 200);
+      vx = random(-20, 20);
+      vy = 0;
+      c = 0x00ff;
+    }
+
+    void update(int dt)
+    {
+      float delta = dt / 1000.0;
+
+      if (x < 200 || x > 320)
+      {
+        vx *= -1;
+      }
+      if (y > 200 && vy > 0)
+      {
+        vy *= -1; // bounce off the ground
+        vy += 20; // lose some velocity each time
+      }
+
+      x += vx * delta;
+      y += vy * delta;
+      vy += 100.0 * delta;  // gravity
+    }
+
+    void draw(VGA14Bit vga) const
+    {
+      vga.dot(x, y, c);
+    }
+};
