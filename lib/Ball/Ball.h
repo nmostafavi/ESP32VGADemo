@@ -42,7 +42,8 @@ class Ball
 
     void draw(VGA14Bit vga) const
     {
-      vga.circle(x, y, 10, 0xf00f);
+      // vga.fillCircle(x, y, 10, 0xffff);
+      // vga.circle(x, y, 10, 0xf00f);
     }
 };
 
@@ -55,10 +56,10 @@ class GravityBall
   public:
     GravityBall()
     {
-      x = random(200, 320);
-      y = random(100, 200);
-      vx = random(-20, 20);
-      vy = 0;
+      x = random(200, 210);
+      y = random(100, 110);
+      vx = random(0, 20);
+      vy = random(0, 10);
       c = 0x00ff;
     }
 
