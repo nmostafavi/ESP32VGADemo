@@ -1,4 +1,6 @@
 # ESP32VGADemo
 A small VGA demo for ESP32 powered by bitluni's ESP32Lib
 
-![images/video.jpg](https://www.youtube.com/watch?v=jPYPp-VyAak)
+<p align="center">
+  <img src="images/video.jpg" alt="" style="width: auto, max-height: 125px" />
+</p>
